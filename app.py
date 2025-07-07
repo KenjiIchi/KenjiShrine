@@ -1,7 +1,8 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, Response
 from flask_cors import CORS
 from openai import OpenAI
 import os
+import json
 
 app = Flask(__name__)
 CORS(app)
@@ -35,7 +36,10 @@ def responder():
         )
 
         texto_gerado = resposta.choices[0].message.content.strip()
-        return jsonify({"resposta": texto_gerado})
+        return Response(
+    json.dumps({"resposta": texto_gerado}, ensure_ascii=False),
+    content_type="application/json; charset=utf-8"
+)
 
     except Exception as e:
         return jsonify({"erro": str(e)}), 500
