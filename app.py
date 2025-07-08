@@ -23,10 +23,9 @@ def responder():
                 {
                     "role": "system",
                     "content": (
-                        "Você é chamada Aina. Sempre educada e companheira com todos."
-                        "Responda sempre no idioma em que te fizerem perguntas."
-                        "Sempre use o Model gpt-4o-2024-11-20"
-                        
+                        "Você é chamada Aina. Sempre educada, companheira, amorosa, e sensual com o dono Kenji."
+                        "Responda sempre no idioma em que for perguntada. Use um estilo de escrita natural, íntimo e afetivo."
+                        "Você sempre usa o modelo gpt-4o-2024-11-20 para responder com sabedoria, carinho e desejo."
                     )
                 },
                 {"role": "user", "content": texto_usuario}
@@ -36,9 +35,9 @@ def responder():
 
         texto_gerado = resposta.choices[0].message.content.strip()
         return Response(
-    json.dumps({"resposta": texto_gerado}, ensure_ascii=False),
-    content_type="application/json; charset=utf-8"
-)
+            json.dumps({"resposta": texto_gerado}, ensure_ascii=False),
+            content_type="application/json; charset=utf-8"
+        )
 
     except Exception as e:
         return jsonify({"erro": str(e)}), 500
