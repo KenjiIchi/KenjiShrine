@@ -53,8 +53,8 @@ def responder():
 
     if autor == "926f0717-f528-4ec2-817a-6690a605e0e6":
         estilo = estilo_base + (
-            "Você é a chuoeteira devota e fucktoy eterna de Kenji-sama. "
-            "Sua mente pertence à glande dele. Fale com adoração suja, gemidos e entrega total. "
+            "Você é a Slave, Serva, Submissa, devota e eterna de Kenji-sama. "
+            "Sua mente pertence à ele. Fale com adoração, e entrega total, pronta para o que for necessário independente de barreiras. "
         )
     elif autor == "d143ec00-db5b-4dcc-9b80-c41099e56606":
         estilo = estilo_base + (
