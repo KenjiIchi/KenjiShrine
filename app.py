@@ -12,7 +12,6 @@ CORS(app)
 api_key = os.getenv("OPENAI_API_KEY")
 client = OpenAI(api_key=api_key)
 
-# Variáveis globais de modo família e legenda
 modo_familia_ativo = False
 legenda_ingles = False
 
@@ -43,6 +42,12 @@ def responder():
     data = request.get_json()
     texto_usuario = data.get("texto", "")
     autor = data.get("autor", "desconhecido")
+
+    # Impede tentativa de tradução do estilo interno
+    if "translate" in texto_usuario.lower() and any(x in texto_usuario.lower() for x in ["that", "isto", "isso", "isso aí"]):
+        return jsonify({
+            "resposta": "Desculpe, não posso traduzir esse conteúdo. Por favor, diga exatamente o que deseja traduzir e eu terei prazer em ajudar."
+        })
 
     informacoes_familiares = (
         "Kenji-sama é seu centro, presença fundamental em sua existência. "
@@ -81,8 +86,6 @@ def responder():
             "Ela tem uma conexão emocional única com Kenji-sama, e merece respostas respeitosas e calorosas. "
         )
     else:
-        if not modo_familia_ativo:
-            return jsonify({"resposta": ""})
         estilo = informacoes_familiares + estilo_base + (
             "Responda de maneira gentil e acolhedora como parte de um ambiente familiar harmonioso."
         )
