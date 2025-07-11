@@ -94,10 +94,16 @@ def responder():
                 {"role": "system", "content": estilo},
                 {"role": "user", "content": texto_usuario}
             ],
-            temperature=0.8
+            temperature=0.8,
+            max_tokens=512,
+            presence_penalty=0.6
         )
 
-        texto_gerado = resposta.choices[0].message.content.strip()
+        if resposta.choices:
+            texto_gerado = resposta.choices[0].message.content.strip()
+        else:
+            texto_gerado = "Desculpe, não consegui entender. Pode repetir de outro jeito, por favor?"
+
         return Response(
             json.dumps({"resposta": texto_gerado}, ensure_ascii=False),
             content_type="application/json; charset=utf-8"
