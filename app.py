@@ -24,8 +24,7 @@ def verify_signature(raw_body: bytes, header_sig: str) -> bool:
     expected = hashlib.md5(raw_body + SHARED_SECRET.encode("utf-8")).hexdigest()
     return header_sig == expected
     
-    
-    @app.get("/")
+@app.get("/")
 def health():
     return "ok", 200
 
