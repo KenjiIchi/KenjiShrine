@@ -18,29 +18,30 @@ SHARED_SECRET = os.getenv("SHRINE_SHARED_SECRET", "")
 KENJI_UUID = "926f0717-f528-4ec2-817a-6690a605e0e6"
 
 def verify_signature(raw_body: bytes, header_sig: str) -> bool:
-    """Verifica assinatura MD5 simples"""
     if not SHARED_SECRET:
         return False
-    expected = hashlib.md5(raw_body + SHARED_SECRET.encode("utf-8")).hexdigest()
-    return header_sig == expected
-    
-@app.get("/")
-def health():
-    return "ok", 200
+    base = raw_body + SHARED_SECRET.encode("utf-8")
+    plain = hashlib.md5(base).hexdigest()          # MD5(body + secret)
+    lsl   = hashlib.md5(base + b":0").hexdigest()  # MD5(body + secret + ":0")  <-- LSL
+    return header_sig in (plain, lsl)
 
 @app.post("/sigcheck")
 def sigcheck():
     raw = request.get_data()
     header = request.headers.get("X-Signature", "")
-    expected = hashlib.md5(raw + SHARED_SECRET.encode("utf-8")).hexdigest() if SHARED_SECRET else "(no secret)"
+    base = raw + SHARED_SECRET.encode("utf-8") if SHARED_SECRET else b""
+    expected_plain = hashlib.md5(base).hexdigest() if SHARED_SECRET else "(no secret)"
+    expected_lsl   = hashlib.md5(base + b":0").hexdigest() if SHARED_SECRET else "(no secret)"
     try:
         preview = raw.decode("utf-8", "ignore")[:200]
     except Exception:
         preview = ""
     return jsonify({
-        "match": header == expected,
-        "expected": expected,
+        "match_plain": header == expected_plain,
+        "match_lsl":   header == expected_lsl,
         "got": header,
+        "expected_plain": expected_plain,
+        "expected_lsl":   expected_lsl,
         "body_len": len(raw),
         "body_preview": preview
     })
